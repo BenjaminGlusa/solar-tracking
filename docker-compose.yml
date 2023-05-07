@@ -1,0 +1,51 @@
+version: "3.9"
+services:
+  Solarman:
+    image: "feinesfabi/solarman:latest"
+    restart: always
+    ports:
+      - "9150:9150"
+
+  Prometheus:
+    image: "prom/prometheus:latest"
+    restart: always
+    ports:
+      - "9090:9090"
+    volumes:
+      - Prometheus_data:/prometheus
+      - /Users/tv/dev/prometheus.yml:/etc/prometheus/prometheus.yml
+
+  Grafana:
+    image: "grafana/grafana:latest"
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - Grafana_data:/var/lib/grafana
+
+  TV-Homepage:
+    image: "nginx:latest"
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - /Users/tv/www:/usr/share/nginx/html
+
+  Mosquitto-MQTT:
+    image: "eclipse-mosquitto:latest"
+    restart: always
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - Mosquitto_conf:/mosquitto/config
+      - Mosquitto_data:/mosquitto/data
+      - Mosquitto_log:/mosquitto/log
+
+  NodeRed:
+    image: "nodered/node-red:latest"
+    restart: always
+    ports:
+      - "1880:1880"
+    volumes:
+      - NodeRed_data:/data
